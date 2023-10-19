@@ -1,0 +1,3 @@
+[submodule "motstanden-website-STINK"]
+	path = motstanden-website-STINK
+	url = git@github.com:SiviKiwi/motstanden-website-STINK.git
