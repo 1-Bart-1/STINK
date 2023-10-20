@@ -1,0 +1,70 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid cabf8207-5290-464d-a5db-d31c713ce03c)
+
+  (paper "A4")
+
+  (title_block
+    (title "S.T.I.N.K")
+    (company "Studentorchesteret den Ohmske Motstanden")
+  )
+
+  (lib_symbols
+  )
+
+
+  (sheet (at 134.62 50.8) (size 53.34 33.02) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 8d7bbeab-1973-44b8-aed2-4e4d1a62bc12)
+    (property "Sheetname" "Speaker + gateway" (at 134.62 50.0884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "Gateway/gateway.kicad_sch" (at 134.62 84.4046 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "Stink-overview"
+        (path "/cabf8207-5290-464d-a5db-d31c713ce03c" (page "4"))
+      )
+    )
+  )
+
+  (sheet (at 39.37 50.8) (size 41.91 33.02) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid 9cff79f6-1e38-4fd8-974e-e06f4e0c362c)
+    (property "Sheetname" "Instrument module" (at 39.37 50.0884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "Instrument/instrument.kicad_sch" (at 39.37 84.4046 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "Stink-overview"
+        (path "/cabf8207-5290-464d-a5db-d31c713ce03c" (page "2"))
+      )
+    )
+  )
+
+  (sheet (at 88.9 50.8) (size 38.1 33.02) (fields_autoplaced)
+    (stroke (width 0.1524) (type solid))
+    (fill (color 0 0 0 0.0000))
+    (uuid c3cf50cb-25cf-454a-ad63-d86ff0651171)
+    (property "Sheetname" "Bass drum module" (at 88.9 50.0884 0)
+      (effects (font (size 1.27 1.27)) (justify left bottom))
+    )
+    (property "Sheetfile" "Bassdrum/bassdrum.kicad_sch" (at 88.9 84.4046 0)
+      (effects (font (size 1.27 1.27)) (justify left top))
+    )
+    (instances
+      (project "Stink-overview"
+        (path "/cabf8207-5290-464d-a5db-d31c713ce03c" (page "3"))
+      )
+    )
+  )
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)

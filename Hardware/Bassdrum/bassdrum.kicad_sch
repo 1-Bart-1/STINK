@@ -1,0 +1,18 @@
+(kicad_sch (version 20230121) (generator eeschema)
+
+  (uuid 4092289d-aa2e-48ae-8c54-8e069d687f80)
+
+  (paper "A4")
+
+  (title_block
+    (company "Studentorchesteret den Ohmske Motstanden")
+  )
+
+  (lib_symbols
+  )
+
+
+  (sheet_instances
+    (path "/" (page "1"))
+  )
+)
