@@ -7,7 +7,7 @@ class Communication {
 public:
     Communication();
     void begin();
-    void sendHit();
+    void sendData();
 private:
     const uint8_t address[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 };
