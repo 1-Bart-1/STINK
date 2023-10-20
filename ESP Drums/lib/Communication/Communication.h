@@ -1,7 +1,7 @@
 #ifndef Communication_H
 #define Communication_H
 
-#include "SendReceiveJson.h"
+#include "../../../lib/SendReceiveJson/SendReceiveJson.h"
 
 class Communication {
 public:
