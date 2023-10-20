@@ -1,18 +1,17 @@
 #include <Arduino.h>
+#include <Communication.h>
+#include <Hit.h>
 
-// put function declarations here:
-int myFunction(int, int);
+void sendHitCallback() {
+  communication.sendHit();
+}
+
+Hit hit(sendHitCallback);
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  communication.begin();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  
 }
