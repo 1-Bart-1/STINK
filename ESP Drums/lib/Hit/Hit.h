@@ -5,17 +5,19 @@
 
 class Hit {
     public:
-        Hit(void (*callback)());
-        void begin();
+        Hit();
+        void begin(void (*sendHitCallback)());
         void update();
-    private:
-        int _pin;
-        int _threshold;
-        int _debounceTime;
-        void (*_callback)();
-        unsigned long _lastDebounceTime;
-        int _lastState;
+        int pin = 2;
+        int threshold = 1000;
+        int debounceTime = 200;
+        void (*sendHit)();
 };
+
+extern Hit hit;
+
+extern void interruptHandler();
+extern void analizeHit(void *pvParameters);
 
 #endif
 

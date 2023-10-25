@@ -6,9 +6,9 @@
 class Communication {
 public:
     Communication();
-    void begin();
-    void sendHit();
+    void begin(void (*callback)(JsonObject* receivedData));
 private:
+    void (*_callback)();
     const uint8_t address[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 };
 

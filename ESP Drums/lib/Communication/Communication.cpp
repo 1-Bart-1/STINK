@@ -3,13 +3,18 @@
 Communication::Communication() {}
 
 void Communication::begin() {
-    sendReceiveJson.begin();
+    Serial.println("Communication beginning");
+    sendReceiveJson.begin(nullptr);
+    Serial.println("Communication begun");
 }
 
 void Communication::sendHit(){
+    Serial.println("Sending hit");
     JsonObject data;
-    data["time"] = millis();
+    data["hit"] = 1;
     sendReceiveJson.send(address, data);
+    Serial.println("Hit sent");
 }
 
 Communication communication;
+
