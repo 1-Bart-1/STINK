@@ -6,9 +6,9 @@ void Communication::begin() {
     sendReceiveJson.begin();
 }
 
-void Communication::sendData(){
+void Communication::sendHit(){
     JsonObject data;
-    data["temp"] = "hot";
+    data["time"] = millis();
     sendReceiveJson.send(address, data);
 }
 
