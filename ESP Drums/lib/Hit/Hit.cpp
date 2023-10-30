@@ -9,12 +9,14 @@ void Hit::begin(void (*sendHit)()) {
     this->sendHit = sendHit;
     pinMode(this->pin, INPUT);
 
+    TaskHandle_t taskHandle;
     xTaskCreate(analizeHit, // Task function
               "Analize Hit", // Task name
-              1000, // Stack size
+              2000, // Stack size
               NULL, 
               0 ,// Priority
-              NULL );
+              &taskHandle );
+    Serial.println(uxTaskGetStackHighWaterMark(taskHandle));
     interruptSemaphore = xSemaphoreCreateBinary();
     if (interruptSemaphore != NULL) 
     {

@@ -1,12 +1,16 @@
 #include <Arduino.h>
 #include <Communication.h>
 
-void calculateBPM(JsonObject* receivedDataPtr) {
-  JsonObject receivedData = *receivedDataPtr;
-  Serial.println("Data received: " + receivedData["hit"].as<String>());
+void calculateBPM(JsonDocument* receivedDataPtr) {
+  serializeJson(*receivedDataPtr, Serial);
+  Serial.println();
+
+  // String hitValue = (*receivedDataPtr)["message"].as<String>();
+  // Serial.println("Data received - hit: " + hitValue);
 }
 
-void onDataReceived(JsonObject* receivedData){
+
+void onDataReceived(JsonDocument* receivedData){
   calculateBPM(receivedData);
 }
 

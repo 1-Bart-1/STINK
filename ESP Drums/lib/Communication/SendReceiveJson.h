@@ -15,13 +15,13 @@
 class SendReceiveJson {
     public:
         SendReceiveJson();
-        void begin(void (*callback)(JsonObject* receivedData));
-        void send(const uint8_t* address, const JsonObject& data);
+        void begin(void (*callback)(JsonDocument* receivedData));
+        void send(const JsonDocument& jsonDoc);
     private:
         static void onDataSent(const uint8_t* mac, esp_now_send_status_t status);
         static void onDataReceived(const uint8_t* mac, const uint8_t* data, int len);
         static SendReceiveJson* _instance;
-        void (*_callback)(JsonObject* receivedData);
+        void (*_callback)(JsonDocument* receivedData);
         void initBroadcastSlave();
         bool manageSlave();
         void deletePeer();

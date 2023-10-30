@@ -8,7 +8,7 @@ SendReceiveJson::SendReceiveJson() {
     _callback = nullptr;
 }
 
-void SendReceiveJson::begin(void (*callback)(JsonObject* receivedData)) {
+void SendReceiveJson::begin(void (*callback)(JsonDocument* receivedData)) {
     _callback = callback;
     WiFi.mode(WIFI_STA);
 
@@ -117,13 +117,16 @@ void SendReceiveJson::initBroadcastSlave() {
 	manageSlave();
 }
 
-void SendReceiveJson::send(const uint8_t* address, const JsonObject& data) {
+void SendReceiveJson::send(const JsonDocument& jsonDoc) {
     // Serialize the JSON document to a string
-    String json;
-    serializeJson(data, json);
+    String jsonString;
+    serializeJson(jsonDoc, jsonString);
+
+	const uint8_t *peer_addr = slave.peer_addr;
 
     // Send the JSON string
-    esp_now_send(address, (uint8_t*)json.c_str(), json.length());
+	Serial.println("Sending: " + jsonString);
+    esp_now_send(peer_addr, (uint8_t*)jsonString.c_str(), jsonString.length());
 }
 
 void SendReceiveJson::onDataSent(const uint8_t* mac, esp_now_send_status_t status) {
@@ -136,22 +139,19 @@ void SendReceiveJson::onDataSent(const uint8_t* mac, esp_now_send_status_t statu
 
 void SendReceiveJson::onDataReceived(const uint8_t* mac, const uint8_t* data, int len) {
     // Parse the JSON string
-    String json((char*)data);
-    DynamicJsonDocument doc(MAX_DATA_SIZE);
-    DeserializationError error = deserializeJson(doc, json);
+	String json((char*)data);
+	DynamicJsonDocument doc(MAX_DATA_SIZE);
+	DeserializationError error = deserializeJson(doc, json);
 
-    // Check for parsing errors
-    if (error) {
-        Serial.println("Error parsing JSON");
-        return;
-    }
+	// Check for parsing errors
+	if (error) {
+		Serial.println("Error parsing JSON");
+		return;
+	}
 
-    // Copy the parsed JSON object to a new JSON object
-    JsonObject receivedData = doc.as<JsonObject>();
+	Serial.println("Data received: " + doc["message"].as<String>());
 
-    Serial.println("Data received: " + receivedData["message"].as<String>());
-
-    _instance->_callback(&receivedData);
+	_instance->_callback(&doc);
 }
 
 SendReceiveJson sendReceiveJson;

@@ -10,10 +10,11 @@ void Communication::begin() {
 
 void Communication::sendHit(){
     Serial.println("Sending hit");
-    JsonObject data;
-    data["hit"] = 1;
-    sendReceiveJson.send(address, data);
-    Serial.println("Hit sent");
+    StaticJsonDocument<JSON_ARRAY_SIZE(1)> data;
+    data["message"] = "Hit";
+    serializeJson(data, Serial);
+    Serial.println();
+    sendReceiveJson.send(data);
 }
 
 Communication communication;
