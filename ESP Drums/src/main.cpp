@@ -6,12 +6,13 @@ void sendHitCallback() {
   communication.sendHit();
 }
 
-Hit hit(sendHitCallback);
-
 void setup() {
+  Serial.begin(115200);
+  hit.begin(sendHitCallback);
   communication.begin();
 }
 
 void loop() {
-  
 }
+
+

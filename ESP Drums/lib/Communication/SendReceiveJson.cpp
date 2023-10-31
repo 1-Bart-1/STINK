@@ -125,6 +125,7 @@ void SendReceiveJson::send(const JsonDocument& jsonDoc) {
 	const uint8_t *peer_addr = slave.peer_addr;
 
     // Send the JSON string
+	Serial.println("Sending: " + jsonString);
     esp_now_send(peer_addr, (uint8_t*)jsonString.c_str(), jsonString.length());
 }
 
