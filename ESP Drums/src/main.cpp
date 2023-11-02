@@ -6,12 +6,18 @@ void sendHitCallback() {
   communication.sendHit();
 }
 
-Hit hit(sendHitCallback);
+void communicationCallback(JsonDocument* receivedData) {
+  serializeJson(*receivedData, Serial);
+  Serial.println();
+}
 
 void setup() {
-  communication.begin();
+  Serial.begin(115200);
+  hit.begin(sendHitCallback);
+  communication.begin(communicationCallback);
 }
 
 void loop() {
-  
 }
+
+

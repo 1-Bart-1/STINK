@@ -1,18 +1,29 @@
 #include <Arduino.h>
+#include <Communication.h>
+#include <Button.h>
 
-// put function declarations here:
-int myFunction(int, int);
+void calculateBPM(JsonDocument* receivedDataPtr) {
+  serializeJson(*receivedDataPtr, Serial);
+  Serial.println();
+
+  // String hitValue = (*receivedDataPtr)["message"].as<String>();
+  // Serial.println("Data received - hit: " + hitValue);
+}
+
+
+void onDataReceived(JsonDocument* receivedData){
+  calculateBPM(receivedData);
+}
+
+void sendButtonCallback(bool song_playing) {
+  communication.sendButton(song_playing);
+}
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(115200);
+  communication.begin(onDataReceived);
+  button.begin(sendButtonCallback);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
 }

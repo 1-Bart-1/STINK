@@ -2,14 +2,20 @@
 
 Communication::Communication() {}
 
-void Communication::begin() {
-    sendReceiveJson.begin();
+void Communication::begin(void (*callback)(JsonDocument* receivedData)) {
+    Serial.println("Communication beginning");
+    sendReceiveJson.begin(callback);
+    Serial.println("Communication begun");
 }
 
 void Communication::sendHit(){
-    JsonObject data;
-    data["time"] = millis();
-    sendReceiveJson.send(address, data);
+    Serial.println("Sending hit");
+    StaticJsonDocument<JSON_ARRAY_SIZE(1)> data;
+    data["message"] = "Hit";
+    serializeJson(data, Serial);
+    Serial.println();
+    sendReceiveJson.send(data);
 }
 
 Communication communication;
+
