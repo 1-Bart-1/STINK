@@ -3,13 +3,13 @@
 Communication::Communication() {}
 
 void Communication::begin() {
-    sendReceiveJson.begin();
+    sendReceiveJson.begin(nullptr);
 }
 
 void Communication::sendData(){
-    JsonObject data;
-    data["temp"] = "hot";
-    sendReceiveJson.send(address, data);
+    StaticJsonDocument<JSON_OBJECT_SIZE(1)> data;
+    data["temp"] = 20;
+    sendReceiveJson.send(data);
 }
 
 Communication communication;

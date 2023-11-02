@@ -2,6 +2,7 @@
 #define Communication_H
 
 #include "SendReceiveJson.h"
+#include <ArduinoJson.h>
 
 class Communication {
 public:
