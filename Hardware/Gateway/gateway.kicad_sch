@@ -1069,6 +1069,10 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 7fbce274-ac6f-4597-af80-283e88684bfb)
   )
+  (text "SPI or serial communication" (at 95.25 67.31 0)
+    (effects (font (size 1.27 1.27)) (justify left bottom))
+    (uuid f8f01724-272d-4ca4-bb92-ba2017e87274)
+  )
 
   (label "RX" (at 54.61 109.22 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left bottom))
