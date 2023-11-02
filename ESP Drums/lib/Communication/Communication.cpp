@@ -2,9 +2,9 @@
 
 Communication::Communication() {}
 
-void Communication::begin() {
+void Communication::begin(void (*callback)(JsonDocument* receivedData)) {
     Serial.println("Communication beginning");
-    sendReceiveJson.begin(nullptr);
+    sendReceiveJson.begin(callback);
     Serial.println("Communication begun");
 }
 

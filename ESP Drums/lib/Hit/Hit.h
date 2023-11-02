@@ -2,6 +2,7 @@
 #define Hit_h
 
 #include "Arduino.h"
+#include <Communication.h>
 
 class Hit {
     public:
