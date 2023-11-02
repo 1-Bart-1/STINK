@@ -1,12 +1,11 @@
 #include <Arduino.h>
 #include <Communication.h>
+#include "Speaker.h"
+
 
 void calculateBPM(JsonDocument* receivedDataPtr) {
-  serializeJson(*receivedDataPtr, Serial);
-  Serial.println();
-
-  // String hitValue = (*receivedDataPtr)["message"].as<String>();
-  // Serial.println("Data received - hit: " + hitValue);
+  speaker.bpmCalc();
+  speaker.monitorTime();
 }
 
 
@@ -17,7 +16,10 @@ void onDataReceived(JsonDocument* receivedData){
 void setup() {
   Serial.begin(115200);
   communication.begin(onDataReceived);
+  speaker.begin();
 }
 
 void loop() {
+  speaker.playMusic();
+  speaker.update(200/*ms*/);
 }

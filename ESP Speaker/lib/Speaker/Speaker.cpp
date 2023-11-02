@@ -1,60 +1,70 @@
 #include "Speaker.h"
 #include <arduino.h>
+#include <numeric>
 
 
 Speaker :: Speaker(){}
 
 void Speaker :: begin(){
+    this->timeCalc(); 
+}
 
+
+void Speaker :: monitorTime(){
+    // when a beat from the drum happens, update live time accordingly
+    this->liveTime = this->prevTime + 1;
+    this->prevTime += 1;
+}
+
+void Speaker :: timeCalc(){
+    time[0] = 0;
+    // Finds the size of the time[] array
+    int timeLength = sizeof(this->time)/sizeof(this->time[0]); 
+    // Inputs the timestamp in beats for each note into said array
+    for (int i; i > timeLength; i++){ 
+        this->time[i] = std::accumulate(this->type, this->type + i, this->time[i]);
+    }
 }
 
 void Speaker :: bpmCalc(){
-    static bool hasStartedCounting = false;
-    static unsigned long bpmMillis;
-    static float bpm;
-
-    if (hasStartedCounting == false & this->drumMsg[0] > 0){
-        bpmMillis = millis();
-        hasStartedCounting = true;
+    static int i = 0;
+    if (i > 5){
+        i = 0;
     }
-    else if (this->drumMsg[6] > 0){
-        bpm = 12/( (sizeof(this->drumMsg)/sizeof(this->drumMsg[0])) *pow(10,-3)) * 60;
-        hasStartedCounting = false;
-        memset(this->drumMsg, 0, sizeof(this->drumMsg));
-        bpmMillis = 0;
+    // Adds the time in ms for each drum-beat into an array
+    this->drumTime[i] = millis(); 
+    // Calculates the bpm using the difference in the "oldest" element in the array and the "newest" element
+    if (this->drumTime[5] != 0){ 
+        int valHigh = i;
+        int valLow = i + 1;
+        (valLow > 5) ? (valLow = 0) : (valLow = valLow);
+        bpm = 12 / ((this->drumTime[valHigh] - this->drumTime[valLow]) * 1/(1000*60));
         this->bpm = bpm;
     }
+    i++;
 }
 
-
-void Speaker :: playSound(int note, int bpm, float type){
-    static bool isPlayingSound = false;
-    static unsigned long soundMillis = 0;
-    unsigned long currentMillis = millis();
-
-    int duration = (60/bpm) * type * 1000; // unit ms
-
-    if (this->isPlayingSound == false){
-        tone(this->auxPin, note, duration);
-        this->isPlayingSound = true;
-        soundMillis = millis();
-    }
-    else if ((this->isPlayingSound == true) && (currentMillis > (soundMillis + duration*1.3))){
-        noTone(this->auxPin);
-        this->isPlayingSound = false;
-    }
-}
 
 void Speaker :: playMusic(){
-    static int count;
-    bool wasPlayingSound = this->isPlayingSound;
+    // plays a new tone if the current time matches the timestamps in the time array
+    if ((liveTime - 0.1) < time[songCount] || time[songCount] < (liveTime + 0.1)){
+        tone(this->auxPin, this->notes[this->songCount]);
+        songCount++;
+    }
+}
 
-    if (wasPlayingSound != this->isPlayingSound && wasPlayingSound == false){
-        count++;
+void Speaker :: update(int updateTime){
+    // updates the current time every 200ms, based on the bpm
+    static unsigned long prevMillis;
+    unsigned long updateMillis = millis();
+
+    if (updateMillis > prevMillis + updateTime){
+        this->liveTime = this->prevTime + 60/this->bpm;
+        prevMillis = updateMillis;
     }
 
-    playSound(this->notes[count], this->bpm, this->types[count]);
 }
 
 
 
+Speaker speaker;
