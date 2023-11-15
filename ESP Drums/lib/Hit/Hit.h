@@ -13,6 +13,7 @@ class Hit {
         int threshold = 1000;
         int debounceTime = 200;
         void (*sendHit)();
+        bool song_playing = false;
 };
 
 extern Hit hit;

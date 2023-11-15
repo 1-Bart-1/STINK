@@ -9,6 +9,9 @@ void sendHitCallback() {
 void communicationCallback(JsonDocument* receivedData) {
   serializeJson(*receivedData, Serial);
   Serial.println();
+  if((*receivedData)["song_playing"] != NULL) {
+    hit.song_playing = (*receivedData)["song_playing"].as<bool>();
+  }
 }
 
 void setup() {

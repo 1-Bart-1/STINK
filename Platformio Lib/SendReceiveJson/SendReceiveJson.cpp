@@ -118,13 +118,12 @@ void SendReceiveJson::initBroadcastSlave() {
 }
 
 void SendReceiveJson::send(const JsonDocument& jsonDoc) {
-    // Serialize the JSON document to a string
     String jsonString;
     serializeJson(jsonDoc, jsonString);
+	Serial.println(jsonString);
 
 	const uint8_t *peer_addr = slave.peer_addr;
 
-    // Send the JSON string
     esp_now_send(peer_addr, (uint8_t*)jsonString.c_str(), jsonString.length());
 }
 
@@ -148,7 +147,8 @@ void SendReceiveJson::onDataReceived(const uint8_t* mac, const uint8_t* data, in
 		return;
 	}
 
-	Serial.println("Data received: " + doc["message"].as<String>());
+	serializeJson(doc, Serial);
+  	Serial.println();
 
 	_instance->_callback(&doc);
 }

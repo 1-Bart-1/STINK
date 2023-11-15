@@ -27,6 +27,7 @@ void Button::begin(void (*sendButton)(bool song_playing)) {
 
 Button button;
 
+
 void interruptHandler() {
     BaseType_t  xHigherPriorityTaskWoken  pdFALSE;
     xSemaphoreGiveFromISR(interruptSemaphore, &xHigherPriorityTaskWoken);
@@ -45,6 +46,8 @@ void analizeButton(void *pvParameters) {
                 button.sendButton(button.song_playing);
             }
             lastDebounceTime = millis();
+
+
         }
     }
 }

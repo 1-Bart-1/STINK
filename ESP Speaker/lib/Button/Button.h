@@ -11,7 +11,7 @@ class Button {
         void update();
         int pin = 2;
         int threshold = 1000;
-        int debounceTime = 200;
+        int debounceTime = 1000;
         bool song_playing = false;
         void (*sendButton)(bool song_playing);
 };

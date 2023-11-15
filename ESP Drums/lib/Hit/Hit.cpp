@@ -37,9 +37,10 @@ void analizeHit(void *pvParameters) {
 
     for (;;) {
         if (xSemaphoreTake(interruptSemaphore, portMAX_DELAY) == pdPASS) {
-            Serial.println("analizing hit");
+            if(hit.song_playing == false) {
+                continue;
+            }
             static int lastDebounceTime = millis();
-
             if ((millis() - lastDebounceTime) > hit.debounceTime) {
                 hit.sendHit();
             }
