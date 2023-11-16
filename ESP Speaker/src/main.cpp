@@ -5,12 +5,9 @@
 
 #include <Speaker.h>
 
-bool song_playing;
+bool song_playing = false;
+int updateTime = 200;
 
-void calculateBPM(JsonDocument* receivedDataPtr) {
-  speaker.bpmCalc();
-  speaker.monitorTime();
-}
 
 void onDataReceived(JsonDocument* receivedData){
   if(receivedData->containsKey("song_playing")) {
@@ -18,6 +15,7 @@ void onDataReceived(JsonDocument* receivedData){
   }
   if(receivedData->containsKey("message") && (*receivedData)["message"].as<String>() == "Hit" && song_playing) {
     speaker.bpmCalc();
+    speaker.monitorTime();
   }
 }
 
@@ -28,11 +26,13 @@ void sendButtonCallback(bool* song_playing) {
 void setup() {
   Serial.begin(115200);
   communication.begin(onDataReceived);
-  button.begin(sendButtonCallback);
-  speaker.begin();
+  button.begin(sendButtonCallback, &song_playing);
+  speaker.begin(updateTime);
 }
 
 void loop() {
-  speaker.playMusic();
-  speaker.update(200/*ms*/);
+  if(song_playing){
+    speaker.update();
+    delay(updateTime);
+  }
 }

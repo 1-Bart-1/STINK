@@ -9,24 +9,24 @@ class Speaker
 {
     public:
         Speaker();
-        void begin();
+        void begin(int updateTime);
         void timeCalc();
         void bpmCalc();
         void playMusic();
         void monitorTime();
-        void update(int updateTime);
+        void update();
 
         unsigned long drumTime[6];
         float bpm;
         int auxPin = 4;
 
     private:
-        int songCount;
-        float liveTime;
-        unsigned int prevTime;
-        const int notes[3] = {C4, 2, 3};
-        const float type[100];
-        float time[100];
+        int updateTime = 0;
+        float liveTime = -8.0f;
+        int32_t prevTime = -8;
+        const int notes[3] = {NOTE_C4, NOTE_A2, NOTE_B3};
+        const float type[3] = {quarterNote, quarterNote, wholeNote};
+        float time[3];
 };
 extern Speaker speaker;
 #endif
