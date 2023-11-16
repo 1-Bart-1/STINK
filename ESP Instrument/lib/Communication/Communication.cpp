@@ -2,14 +2,12 @@
 
 Communication::Communication() {}
 
-void Communication::begin() {
-    sendReceiveJson.begin();
-}
 
-void Communication::sendData(){
-    JsonObject data;
-    data["temp"] = "hot";
-    sendReceiveJson.send(address, data);
+void Communication::sendData(float average_sourness, float average_volume){
+    StaticJsonDocument<JSON_ARRAY_SIZE(2)> data;
+    data["average_sourness"] = average_sourness;
+    data["loudness"] = average_volume;
+    sendReceiveJson.send(data);
 }
 
 Communication communication;

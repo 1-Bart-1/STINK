@@ -1,18 +1,18 @@
-#include "Hit.h"
+#include "Button.h"
 
 SemaphoreHandle_t interruptSemaphore;
 
-Hit::Hit() {
+Button::Button() {
 }
 
-void Hit::begin(void (*sendHit)()) {
-    this->sendHit = sendHit;
+void Button::begin(void (*sendButton)(bool song_playing)) {
+    this->sendButton = sendButton;
     pinMode(this->pin, INPUT);
     gpio_set_pull_mode(static_cast<gpio_num_t>(this->pin), GPIO_PULLDOWN_ONLY);
 
     TaskHandle_t taskHandle;
-    xTaskCreate(analizeHit, // Task function
-              "Analize Hit", // Task name
+    xTaskCreate(analizeButton, // Task function
+              "Analize Button", // Task name
               2000, // Stack size
               NULL, 
               0 ,// Priority
@@ -25,26 +25,29 @@ void Hit::begin(void (*sendHit)()) {
     }  
 }
 
-Hit hit;
+Button button;
+
 
 void interruptHandler() {
     BaseType_t  xHigherPriorityTaskWoken  pdFALSE;
     xSemaphoreGiveFromISR(interruptSemaphore, &xHigherPriorityTaskWoken);
 }
 
-void analizeHit(void *pvParameters) {
+void analizeButton(void *pvParameters) {
     (void) pvParameters;
 
     for (;;) {
         if (xSemaphoreTake(interruptSemaphore, portMAX_DELAY) == pdPASS) {
-            if(hit.song_playing == false) {
-                continue;
-            }
+            Serial.println("analizing button");
             static int lastDebounceTime = millis();
-            if ((millis() - lastDebounceTime) > hit.debounceTime) {
-                hit.sendHit();
+
+            if ((millis() - lastDebounceTime) > button.debounceTime) {
+                button.song_playing = !button.song_playing;
+                button.sendButton(button.song_playing);
             }
             lastDebounceTime = millis();
+
+
         }
     }
 }

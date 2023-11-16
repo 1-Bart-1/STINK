@@ -7,6 +7,7 @@ class Communication {
 public:
     Communication();
     void begin(void (*callback)(JsonDocument* receivedData));
+    void sendButton(bool song_playing);
 private:
     void (*_callback)();
     const uint8_t address[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
