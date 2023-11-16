@@ -24,9 +24,9 @@ class Speaker
         int updateTime = 0;
         float liveTime = -8.0f;
         int32_t prevTime = -8;
-        const int notes[3] = {NOTE_C4, NOTE_A2, NOTE_B3};
-        const float type[3] = {quarterNote, quarterNote, wholeNote};
-        float time[3];
+        const int notes[4] = {NOTE_C4, NOTE_A2, NOTE_B3, 0};
+        const float type[4] = {quarterNote, quarterNote, wholeNote, wholeNote};
+        float time[4];
 };
 extern Speaker speaker;
 #endif

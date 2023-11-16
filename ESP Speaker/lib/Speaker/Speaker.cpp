@@ -53,23 +53,52 @@ void Speaker :: bpmCalc(){
 void Speaker :: playMusic(){
     // plays a new tone if the current time matches the timestamps in the time array
     static int songCount = 0;
-    if (abs(time[songCount] - liveTime) < ((float)this->updateTime/1000.0)){
-        tone(this->auxPin, this->notes[songCount]);
-        songCount++;
+    static int lastSongCount = 0;
+
+    static int timeLength = sizeof(time) / sizeof(time[0]);
+
+    if (liveTime >= 0 && songCount < timeLength) {
+        if(this->liveTime >= this->time[songCount]) {
+            // noTone(this->auxPin);
+            tone(this->auxPin, this->notes[songCount]);
+            Serial.printf("\tsongCount %i \n", songCount);
+            Serial.printf("\ttime %f \n", time[songCount]);
+            Serial.printf("\tnote %i \n", this->notes[songCount]);
+            songCount++;
+        }
+    } else if (liveTime >= 0 && songCount >= timeLength) {
+        noTone(this->auxPin);
     }
+
+
+    // if (liveTime >= 0) {
+    //     Serial.printf("songCount %i \n", songCount);
+    //     for(songCount; time[songCount] < liveTime; songCount++){
+    //         Serial.printf("\t\ttime %i \n", time[songCount]);
+    //     };
+    //     for(songCount; time[songCount + 1] > liveTime; songCount--){
+    //         Serial.printf("\t\ttime %i \n", time[songCount]);
+    //     };
+
+    //     if(songCount != lastSongCount && songCount >= 0) tone(this->auxPin, this->notes[songCount]);
+    //     lastSongCount = songCount;
+    // }
 }
 
 void Speaker :: update(){
+    static long lastTime = millis();
+    long currentTime = millis();
+    float deltaTime = (currentTime - lastTime) / 1000.0; // convert milliseconds to seconds
+    lastTime = currentTime;
+
     Serial.printf("livetime %f \n", this->liveTime);
-    Serial.printf("prevTime %i \n", this->prevTime);
+    // Serial.printf("prevTime %i \n", this->prevTime);
     if (this->bpm != 0){
-        Serial.printf("bpm %f\n", this->bpm);
-        this->liveTime = (float)this->prevTime + 60.0/this->bpm;
+        // Serial.printf("bpm %f\n", this->bpm);
+        this->liveTime += deltaTime * (60.0/this->bpm);
     }
 
-    if (this->liveTime>=0){
-        playMusic();
-    }
+    playMusic();
 }
 
 

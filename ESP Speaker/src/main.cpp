@@ -6,7 +6,7 @@
 #include <Speaker.h>
 
 bool song_playing = false;
-int updateTime = 200;
+int updateTime = 50;
 
 
 void onDataReceived(JsonDocument* receivedData){
