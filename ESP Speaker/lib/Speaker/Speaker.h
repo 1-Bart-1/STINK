@@ -1,5 +1,6 @@
 #ifndef Speaker_h
 #define Speaker_h
+#include "notes.h"
 
 #include <arduino.h>
 #include <notes.h>
@@ -9,22 +10,25 @@ class Speaker
     public:
         Speaker();
         void begin();
+        void timeCalc();
         void bpmCalc();
-        void playSound(int note, int bpm, float type);
         void playMusic();
+        void monitorTime();
+        void update(int updateTime);
 
-        int numberOfHits = 0;
+        unsigned long drumTime[6];
         float bpm;
         int auxPin = 4;
 
     private:
-        bool isPlayingSound;
-        const int notes[4] = {A4, A1, A3, A5};
-        const float types[4] = {quarterNote, quarterNote, quarterNote, quarterNote};
+        int songCount;
+        float liveTime;
+        unsigned int prevTime;
+        const int notes[3] = {C4, 2, 3};
+        const float type[100];
+        float time[100];
 };
-
 extern Speaker speaker;
-
 #endif
 
 
