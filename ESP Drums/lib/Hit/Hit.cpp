@@ -8,7 +8,7 @@ Hit::Hit() {
 void Hit::begin(void (*sendHit)()) {
     this->sendHit = sendHit;
     pinMode(this->pin, INPUT);
-    gpio_set_pull_mode(static_cast<gpio_num_t>(this->pin), GPIO_PULLDOWN_ONLY);
+    gpio_set_pull_mode(static_cast<gpio_num_t>(this->pin), GPIO_PULLUP_ONLY);
 
     TaskHandle_t taskHandle;
     xTaskCreate(analizeHit, // Task function
@@ -22,7 +22,7 @@ void Hit::begin(void (*sendHit)()) {
     if (interruptSemaphore != NULL) 
     {
         attachInterrupt(digitalPinToInterrupt(2), interruptHandler, HIGH);
-    }  
+    }
 }
 
 Hit hit;

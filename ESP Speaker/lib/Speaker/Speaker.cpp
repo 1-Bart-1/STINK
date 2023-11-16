@@ -56,5 +56,4 @@ void Speaker :: playMusic(){
     playSound(this->notes[count], this->bpm, this->types[count]);
 }
 
-
-
+Speaker speaker;
