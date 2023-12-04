@@ -10,16 +10,16 @@ int updateTime = 50;
 
 
 void onDataReceived(JsonDocument* receivedData){
-  if(receivedData->containsKey("song_playing")) {
-    song_playing = (*receivedData)["song_playing"].as<bool>();
-  }
+  // if(receivedData->containsKey("song_playing")) {
+  //   song_playing = (*receivedData)["song_playing"].as<bool>();
+  // }
   if(receivedData->containsKey("message") && (*receivedData)["message"].as<String>() == "Hit" && song_playing) {
-    speaker.bpmCalc();
-    speaker.monitorTime();
+    speaker.updateOnHit();
   }
 }
 
 void sendButtonCallback(bool* song_playing) {
+  speaker.reset();
   communication.sendButton(*song_playing);
 }
 
@@ -27,12 +27,12 @@ void setup() {
   Serial.begin(115200);
   communication.begin(onDataReceived);
   button.begin(sendButtonCallback, &song_playing);
-  speaker.begin(updateTime);
+  speaker.begin();
 }
 
 void loop() {
   if(song_playing){
-    speaker.update();
+    speaker.updateOnLoop();
     delay(updateTime);
   }
 }

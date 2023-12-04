@@ -1,15 +1,27 @@
 #include "Speaker.h"
-#include <arduino.h>
-#include <numeric>
-
 
 Speaker :: Speaker(){}
 
-void Speaker :: begin(int updateTime){
-    this->updateTime = updateTime;
+
+void Speaker :: begin(){
+    this->processSong();
     this->timeCalc(); 
 }
 
+void Speaker :: processSong() {
+    for (int i = 0; i < 32; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (i % 2 == 0) {
+                this->notes.push_back(this->song[i][j]);
+            } else {
+                this->types.push_back(this->song[i][j]);
+            }
+        }
+    }
+    
+    Serial.printf("First three notes %i\t%i\t%i\n",notes[0],notes[1],notes[2]);
+    Serial.printf("First three types %f\t%f\t%f\n",types[0],types[1],types[2]);
+}
 
 void Speaker :: monitorTime(){
     // when a beat from the drum happens, update live time accordingly
@@ -18,89 +30,76 @@ void Speaker :: monitorTime(){
 }
 
 void Speaker :: timeCalc(){
-    time[0] = 0;
-    // Finds the size of the time[] array
-    int timeLength = sizeof(this->time)/sizeof(this->time[0]); 
-    // Inputs the timestamp in beats for each note into said array
-    Serial.println(timeLength);
-    for (int i = 0; i < timeLength; i++){ 
-        this->time[i] = std::accumulate(this->type, this->type + i, this->time[i]);
+    time.push_back(0.0f); // Initialize the first element of time vector
+    for (int i = 1; i < types.size(); i++) {
+        time.push_back(std::accumulate(types.begin(), types.begin() + i, 0.0f));
     }
+    Serial.printf("First three times %f\t%f\t%f\n",time[0],time[1],time[2]);
 }
 
 void Speaker :: bpmCalc(){
-    static unsigned long bpmMillis = 0;
-    static float current_bpm = 0;
-    static unsigned long previousMillis = 0;
-    static int numberOfHits = 0;
-
-    numberOfHits++;
-    if (numberOfHits <= 1){
-        bpmMillis = millis();
-    } else if (numberOfHits > 1) {
-        unsigned long currentMillis = millis();
-        float minutes = (currentMillis - previousMillis) / 60000.0; // convert milliseconds to minutes
-        current_bpm = 1 / minutes;
-
-        if (this->bpm != 0) this->bpm = (this->bpm*5 + current_bpm*1) / 6;
-        else this->bpm = current_bpm;
-
-        previousMillis = currentMillis;
+    unsigned long currentBeatTime = millis();
+    
+    if (lastBeatTime == 0) {
+        lastBeatTime = currentBeatTime;
+        return;
     }
+
+    float beatInterval = (currentBeatTime - lastBeatTime) / 1000.0;
+    lastBeatTime = currentBeatTime;
+
+    if (beatInterval <= 0) {
+        return;
+    }
+    float currentBpm = 60.0 / beatInterval;
+
+    if (this->bpm != 0) {
+        this->bpm = (this->bpm + currentBpm*5) / 6;
+    } else {
+        this->bpm = currentBpm;
+    }
+    Serial.printf("bpm %f\n", this->bpm);
 }
 
 
 void Speaker :: playMusic(){
-    // plays a new tone if the current time matches the timestamps in the time array
-    static int songCount = 0;
-    static int lastSongCount = 0;
-
-    static int timeLength = sizeof(time) / sizeof(time[0]);
-
-    if (liveTime >= 0 && songCount < timeLength) {
+    if (liveTime >= 0 && songCount < time.size()) {
         if(this->liveTime >= this->time[songCount]) {
-            // noTone(this->auxPin);
             tone(this->auxPin, this->notes[songCount]);
             Serial.printf("\tsongCount %i \n", songCount);
             Serial.printf("\ttime %f \n", time[songCount]);
             Serial.printf("\tnote %i \n", this->notes[songCount]);
             songCount++;
         }
-    } else if (liveTime >= 0 && songCount >= timeLength) {
+    } else if (liveTime >= 0 && songCount >= time.size()) {
         noTone(this->auxPin);
     }
-
-
-    // if (liveTime >= 0) {
-    //     Serial.printf("songCount %i \n", songCount);
-    //     for(songCount; time[songCount] < liveTime; songCount++){
-    //         Serial.printf("\t\ttime %i \n", time[songCount]);
-    //     };
-    //     for(songCount; time[songCount + 1] > liveTime; songCount--){
-    //         Serial.printf("\t\ttime %i \n", time[songCount]);
-    //     };
-
-    //     if(songCount != lastSongCount && songCount >= 0) tone(this->auxPin, this->notes[songCount]);
-    //     lastSongCount = songCount;
-    // }
 }
 
-void Speaker :: update(){
-    static long lastTime = millis();
-    long currentTime = millis();
-    float deltaTime = (currentTime - lastTime) / 1000.0; // convert milliseconds to seconds
-    lastTime = currentTime;
-
+void Speaker :: liveTimeCalc(){
+    // calculates the current song time based on the bpm and the minutes passed since the last beat
+    float minutesPassed = (millis() - this->lastBeatTime) / 1000.0 / 60.0;
+    this->liveTime = this->bpm * minutesPassed + this->prevTime;
     Serial.printf("livetime %f \n", this->liveTime);
-    // Serial.printf("prevTime %i \n", this->prevTime);
-    if (this->bpm != 0){
-        // Serial.printf("bpm %f\n", this->bpm);
-        this->liveTime += deltaTime * (60.0/this->bpm);
-    }
+}
 
+void Speaker :: updateOnHit(){
+    this->monitorTime();
+    this->bpmCalc();
+}
+
+void Speaker :: updateOnLoop(){
+    this->liveTimeCalc();
     playMusic();
 }
 
+void Speaker :: reset(){
+    this->prevTime = -8;
+    this->liveTime = -8.0f;
+    this->lastBeatTime = 0;
+    this->bpm = 0;
+    this->songCount = 0;
+}
 
 
 Speaker speaker;
