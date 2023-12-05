@@ -21,7 +21,8 @@ void Hit::begin(void (*sendHit)()) {
     interruptSemaphore = xSemaphoreCreateBinary();
     if (interruptSemaphore != NULL) 
     {
-        attachInterrupt(digitalPinToInterrupt(2), interruptHandler, HIGH);
+        attachInterrupt(digitalPinToInterrupt(2), interruptHandler, RISING);
+        
     }
 }
 

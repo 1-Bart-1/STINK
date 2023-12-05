@@ -5,7 +5,7 @@ Speaker :: Speaker(){}
 
 void Speaker :: begin(){
     this->processSong();
-    this->timeCalc(); 
+    this->locationCalc(); 
 }
 
 void Speaker :: processSong() {
@@ -23,18 +23,18 @@ void Speaker :: processSong() {
     Serial.printf("First three types %f\t%f\t%f\n",types[0],types[1],types[2]);
 }
 
-void Speaker :: monitorTime(){
-    // when a beat from the drum happens, update live time accordingly
-    this->liveTime = this->prevTime + 1.0f;
-    this->prevTime += 1;
+void Speaker :: monitorLocation(){
+    // when a beat from the drum happens, update live location accordingly
+    this->liveLocation = this->prevLocation + 1.0f;
+    this->prevLocation += 1;
 }
 
-void Speaker :: timeCalc(){
-    time.push_back(0.0f); // Initialize the first element of time vector
+void Speaker :: locationCalc(){
+    location.push_back(0.0f); // Initialize the first element of location vector
     for (int i = 1; i < types.size(); i++) {
-        time.push_back(std::accumulate(types.begin(), types.begin() + i, 0.0f));
+        location.push_back(std::accumulate(types.begin(), types.begin() + i, 0.0f));
     }
-    Serial.printf("First three times %f\t%f\t%f\n",time[0],time[1],time[2]);
+    Serial.printf("First three locations %f\t%f\t%f\n",location[0],location[1],location[2]);
 }
 
 void Speaker :: bpmCalc(){
@@ -63,39 +63,39 @@ void Speaker :: bpmCalc(){
 
 
 void Speaker :: playMusic(){
-    if (liveTime >= 0 && songCount < time.size()) {
-        if(this->liveTime >= this->time[songCount]) {
+    if (liveLocation >= 0 && songCount < location.size()) {
+        if(this->liveLocation >= this->location[songCount]) {
             tone(this->auxPin, this->notes[songCount]);
             Serial.printf("\tsongCount %i \n", songCount);
-            Serial.printf("\ttime %f \n", time[songCount]);
+            Serial.printf("\tlocation %f \n", location[songCount]);
             Serial.printf("\tnote %i \n", this->notes[songCount]);
             songCount++;
         }
-    } else if (liveTime >= 0 && songCount >= time.size()) {
+    } else if (liveLocation >= 0 && songCount >= location.size()) {
         noTone(this->auxPin);
     }
 }
 
-void Speaker :: liveTimeCalc(){
-    // calculates the current song time based on the bpm and the minutes passed since the last beat
+void Speaker :: liveLocationCalc(){
+    // calculates the current song location based on the bpm and the minutes passed since the last beat
     float minutesPassed = (millis() - this->lastBeatTime) / 1000.0 / 60.0;
-    this->liveTime = this->bpm * minutesPassed + this->prevTime;
-    Serial.printf("livetime %f \n", this->liveTime);
+    this->liveLocation = this->bpm * minutesPassed + this->prevLocation;
+    Serial.printf("liveLocation %f \n", this->liveLocation);
 }
 
 void Speaker :: updateOnHit(){
-    this->monitorTime();
+    this->monitorLocation();
     this->bpmCalc();
 }
 
 void Speaker :: updateOnLoop(){
-    this->liveTimeCalc();
+    this->liveLocationCalc();
     playMusic();
 }
 
 void Speaker :: reset(){
-    this->prevTime = -8;
-    this->liveTime = -8.0f;
+    this->prevLocation = -8;
+    this->liveLocation = -8.0f;
     this->lastBeatTime = 0;
     this->bpm = 0;
     this->songCount = 0;

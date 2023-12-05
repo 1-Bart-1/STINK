@@ -16,18 +16,18 @@ class Speaker
         void updateOnHit();
         void reset();
     private:
-        float bpm;
+        float bpm; // the speed of the movement of the current location in the song
         int auxPin = 4;
         int songCount;
         void processSong();
-        void timeCalc();
+        void locationCalc();
         void bpmCalc();
         void playMusic();
-        void liveTimeCalc();
-        void monitorTime();
+        void liveLocationCalc();
+        void monitorLocation();
         unsigned long lastBeatTime = 0;
-        float liveTime = -8.0f;
-        int32_t prevTime = -8;
+        float liveLocation = -8.0f;
+        int32_t prevLocation = -8;
         std::vector<std::vector<float>> song = {
             {NA4, NA4, NA4, NB4, NA4},
             {QN, EN, QN, EN, QN},
@@ -65,7 +65,7 @@ class Speaker
         };
         std::vector<int> notes;
         std::vector<float> types;
-        std::vector<float> time;
+        std::vector<float> location; // location in the song
 };
 extern Speaker speaker;
 #endif
