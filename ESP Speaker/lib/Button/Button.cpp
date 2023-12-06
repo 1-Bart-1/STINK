@@ -5,7 +5,8 @@ SemaphoreHandle_t interruptSemaphore;
 Button::Button() {
 }
 
-void Button::begin(void (*sendButton)(bool song_playing)) {
+void Button::begin(void (*sendButton)(bool* song_playing), bool* song_playing) {
+    this->song_playing = song_playing;
     this->sendButton = sendButton;
     pinMode(this->pin, INPUT);
     gpio_set_pull_mode(static_cast<gpio_num_t>(this->pin), GPIO_PULLDOWN_ONLY);
@@ -42,12 +43,10 @@ void analizeButton(void *pvParameters) {
             static int lastDebounceTime = millis();
 
             if ((millis() - lastDebounceTime) > button.debounceTime) {
-                button.song_playing = !button.song_playing;
+                *(button.song_playing) = !(*(button.song_playing));
                 button.sendButton(button.song_playing);
             }
             lastDebounceTime = millis();
-
-
         }
     }
 }
