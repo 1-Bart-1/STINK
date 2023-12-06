@@ -7,13 +7,12 @@
 class Button {
     public:
         Button();
-        void begin(void (*sendButtonCallback)(bool song_playing));
+        void begin(void (*sendButtonCallback)(bool* song_playing), bool* song_playing);
         void update();
         int pin = 2;
-        int threshold = 1000;
         int debounceTime = 1000;
-        bool song_playing = false;
-        void (*sendButton)(bool song_playing);
+        bool* song_playing;
+        void (*sendButton)(bool* song_playing);
 };
 
 extern Button button;
