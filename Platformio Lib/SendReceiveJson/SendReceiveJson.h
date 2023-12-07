@@ -10,7 +10,7 @@
 #define DELETEBEFOREPAIR 0
 
 // Define the maximum size of the data that can be sent or received
-#define MAX_DATA_SIZE 100
+#define MAX_DATA_SIZE 1000
 
 class SendReceiveJson {
     public:

@@ -18,7 +18,8 @@ private:
     const char* _password;
     const char* _url;
     static bool _serialDataAvailable;
-    void sendJsonOverHttp(const String& jsonString);
+    String jsonString = "";
+    void sendJsonOverHttp();
 };
 
 #endif 

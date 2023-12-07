@@ -144,6 +144,7 @@ void SendReceiveJson::onDataReceived(const uint8_t* mac, const uint8_t* data, in
 	// Check for parsing errors
 	if (error) {
 		Serial.println("Error parsing JSON");
+		Serial.println(error.c_str());
 		return;
 	}
 

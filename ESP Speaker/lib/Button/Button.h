@@ -10,6 +10,7 @@ class Button {
         void begin(void (*sendButtonCallback)(bool* song_playing), bool* song_playing);
         void update();
         int pin = 2;
+        int ledPin = 5;
         int debounceTime = 1000;
         bool* song_playing;
         void (*sendButton)(bool* song_playing);

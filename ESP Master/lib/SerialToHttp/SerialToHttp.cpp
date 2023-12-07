@@ -17,17 +17,25 @@ void SerialToHttp::begin() {
         Serial.println("Connecting to WiFi...");
     }
     Serial.println("Connected to WiFi");
-    Serial1.begin(115200);
+    Serial2.begin(115200);
 }
 
 void SerialToHttp::handleSerialData() {
-    if (Serial1.available()) {
-        String jsonString = Serial1.readStringUntil('\n');
-        sendJsonOverHttp(jsonString);
+    while (Serial2.available()) {
+        char nextChar = Serial2.read();
+        if(nextChar != '\n') {
+            Serial.println("Received char: " + String(nextChar));
+            jsonString.concat(nextChar);
+            return;
+        } else {
+            Serial.println("Received JSON: " + jsonString);
+            sendJsonOverHttp();
+            jsonString = "";
+        }
     }
 }
 
-void SerialToHttp::sendJsonOverHttp(const String& jsonString) {
+void SerialToHttp::sendJsonOverHttp() {
     if (WiFi.status() == WL_CONNECTED) {
         HTTPClient http;
         http.begin(_url); // Specify the URL

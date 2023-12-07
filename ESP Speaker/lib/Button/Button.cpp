@@ -9,6 +9,7 @@ void Button::begin(void (*sendButton)(bool* song_playing), bool* song_playing) {
     this->song_playing = song_playing;
     this->sendButton = sendButton;
     pinMode(this->pin, INPUT);
+    pinMode(this->ledPin, OUTPUT);
     gpio_set_pull_mode(static_cast<gpio_num_t>(this->pin), GPIO_PULLDOWN_ONLY);
 
     TaskHandle_t taskHandle;
@@ -44,6 +45,7 @@ void analizeButton(void *pvParameters) {
 
             if ((millis() - lastDebounceTime) > button.debounceTime) {
                 *(button.song_playing) = !(*(button.song_playing));
+                digitalWrite(button.ledPin, *(button.song_playing) ? HIGH : LOW);
                 button.sendButton(button.song_playing);
             }
             lastDebounceTime = millis();

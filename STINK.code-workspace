@@ -14,6 +14,10 @@
 		{
 			"name": "ESP Speaker",
 			"path": "ESP Speaker"
+		},
+		{
+			"name": "ESP Master",
+			"path": "ESP Master"
 		}
 	],
 	"settings": {

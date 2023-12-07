@@ -16,6 +16,11 @@ void onDataReceived(JsonDocument* receivedData){
   if(receivedData->containsKey("message") && (*receivedData)["message"].as<String>() == "Hit" && song_playing) {
     speaker.updateOnHit();
   }
+  if(receivedData->containsKey("loudness")) {
+    Serial.println((*receivedData)["loudness"].as<float>());
+    Serial.println("trying to send");
+    communication.sendSongInfo(receivedData);
+  }
 }
 
 void sendButtonCallback(bool* song_playing) {
